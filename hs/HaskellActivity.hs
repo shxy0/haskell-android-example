@@ -2,15 +2,19 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module HaskellActivity where
+module HaskellActivity 
+where
 
 import Control.Monad.IO.Class
+
 import Data.Text (Text, append, pack)
 import qualified Data.Text.IO as TIO
+
 import Foreign.C.String
 -- import Foreign.JNI
 -- import Foreign.JNI.Lookup
 import Foreign.Ptr
+
 import GHC.Conc
 
 import Data.Foldable
@@ -19,20 +23,6 @@ import Data.IORef
 import System.IO
 import Control.Concurrent
 import Control.Monad
- 
-{- 
-textView_class :: JClass
-textView_class = jclass "android/widget/TextView"
-
-textView_new :: JObject -> JNI JObject
-textView_new ctx = do
-  newObject textView_class (jmethodid textView_class "<init>" "(Landroid/content/Context;)V") [jv ctx]
-
-textView_setText :: JObject -> Text -> JNI ()
-textView_setText tv txt = do
-  jtxt <- newString txt
-  callVoidMethod tv (jmethodid textView_class "setText" "(Ljava/lang/CharSequence;)V") [jv jtxt]
--}
 
 
 data JObjectObj
@@ -41,16 +31,15 @@ type JObject = Ptr JObjectObj
 data JNINativeInterface_
 type JNIEnv = Ptr (Ptr JNINativeInterface_)
 
+-------------------------------------------------------------------------------81
 
-{- testfun :: IORef Int -> IO Int
-testfun ref = do
-    n <- readIORef ref
-    writeIORef ref (n+1)
-    return n
--}
-              
+foreign export ccall
+  "Java_com_example_hellojni_HelloJni_onCreateHS"
+  onCreate :: JNIEnv -> JObject -> JObject -> IO ()
+
 onCreate :: JNIEnv -> JObject -> JObject -> IO ()
-onCreate env activity tv =  do
+onCreate env activity tv =  
+  do
     getNumProcessors >>= setNumCapabilities
     caps <- getNumCapabilities
     let txt  = "MESSAGE FROM HASKELL:\n\nRunning on " ++ show caps ++ " CPUs!"
@@ -82,26 +71,22 @@ onCreate env activity tv =  do
 
     textViewSetText env tv cstr1
 
+-------------------------------------------------------------------------------81
 
-
-foreign export ccall
-  "Java_com_example_hellojni_HelloJni_onCreateHS"
-  onCreate :: JNIEnv -> JObject -> JObject -> IO ()
+-- foreign export ccall
+  -- "Java_com_example_hellojni_HelloJni_onClickHS"
+  -- onClick :: IORef Int -> JNIEnv -> JObject -> JObject -> IO ()
 
 onClick :: IORef Int -> JNIEnv -> JObject -> JObject -> IO ()
-onClick ref env activity tv = do
-  n <- readIORef ref
-  writeIORef ref (n+1)
-  cstr <- newCString (show n) -- "CLICKED"
-  shout env cstr
-  textViewSetText env tv cstr
+onClick ref env activity tv = 
+  do
+    n <- readIORef ref
+    writeIORef ref (n+1)
+    cstr <- newCString (show n) -- "CLICKED"
+    shout env cstr
+    textViewSetText env tv cstr
   
-{- 
-foreign export ccall
-  "blah_Java_com_example_hellojni_HelloJni_onClickHS"
-  onClick :: JNIEnv -> JObject -> JObject -> IO ()
--}
-
+-------------------------------------------------------------------------------81
 
 foreign import ccall "wrapper" mkOnClickFPtr
   :: (JNIEnv -> JObject -> JObject -> IO ()) 

@@ -1,0 +1,1 @@
+adb logcat -s HELLO  ActivityManager ActivityThread Timeline HwLauncher WindowManager HwWindowManagerService AndroidRuntime 

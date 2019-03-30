@@ -31,78 +31,65 @@ public class HelloJni extends Activity
     TextView  tv; 
 
     Toolbar toolbar;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        Log.d("HELLO", "haskell library LOADING");
+        System.loadLibrary("haskell");
+        Log.d("HELLO", "haskell library loaded");
+
         super.onCreate(savedInstanceState);
-	setContentView(R.layout.main);
+        setContentView(R.layout.main);
         // onCreateHS(savedInstanceState);
 
-	toolbar = (Toolbar)findViewById(R.id.toolbar);
-	toolbar.setTitle("My toolbar");
-	toolbar.setSubtitle("Subtitle");
-	//setActionBar(toolbar);
-	toolbar.inflateMenu(R.menu.toolbar);
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setTitle("My toolbar");
+        toolbar.setSubtitle("Subtitle");
+        //setActionBar(toolbar);
+        toolbar.inflateMenu(R.menu.toolbar);
 
-
-	
         //tv.setText( stringFromJNI() );
-	tv = (TextView) findViewById(R.id.textview1);
-	onCreateHS(tv);
+        tv = (TextView) findViewById(R.id.textview1);
+        onCreateHS(tv);
 
-	
-
-	addListenerOnButton();
-	//stringFromJNI();
+        // addListenerOnButton();
+        
+        //stringFromJNI();
         //setContentView(tv);
+        
+        Log.d("HELLO", "HelloJni Activity created");
     }
-
-    public void addListenerOnButton() {
+/*
+    public void addListenerOnButton() 
+    {
         button = (Button) findViewById(R.id.button1);
-	button.setOnClickListener(new OnClickListener() {
-            @Override
-	    public void onClick(View arg0) {
-
-                // Log.d("HELLOJNI", "button clicked");
-		onClickHS(tv);
-
-		
-	    }
-	});
-							
-
+        button.setOnClickListener
+          ( new OnClickListener() 
+            {
+                @Override
+                public void onClick(View arg0) 
+                {
+                    // Log.d("HELLOJNI", "button clicked");
+                    onClickHS(tv);
+                }
+            }
+          );
     }
-       
-    /* A native method that is implemented by the
-     * 'hello-jni' native library, which is packaged
-     * with this application.
-     */
-    //public native String stringFromJNI();
+*/
     public native void onCreateHS(TextView tv); // (Bundle savedInstanceState);
 
-    public native void onClickHS(TextView tv); // (Bundle savedInstanceState);
+    // public native void onClickHS(TextView tv); // (Bundle savedInstanceState);
 
-    /* This is another native method declaration that is *not*
-     * implemented by 'hello-jni'. This is simply to show that
-     * you can declare as many native methods in your Java code
-     * as you want, their implementation is searched in the
-     * currently loaded native libraries only the first time
-     * you call them.
-     *
-     * Trying to call this function will result in a
-     * java.lang.UnsatisfiedLinkError exception !
-     */
-    public native String  stringFromJNI(); // (Bundle savedInstanceState);
-
-    public native String  unimplementedStringFromJNI();
-
-    /* this is used to load the 'hello-jni' library on application
-     * startup. The library has already been unpacked into
-     * /data/data/com.example.hellojni/lib/libhello-jni.so at
-     * installation time by the package manager.
-     */
+    // public native String  stringFromJNI(); // (Bundle savedInstanceState);
+    // public native String  unimplementedStringFromJNI();
+    
+/*
     static {
+        Log.d("HELLO", "haskell library LOADING");
         System.loadLibrary("haskell");
+        Log.d("HELLO", "haskell library loaded");
     }
+*/
 }

@@ -1,87 +1,34 @@
-//apply plugin: 'java'
+apply plugin: 'com.android.application'
 
-apply plugin: 'com.android.model.application'
-//apply plugin: 'android-native-dependencies'
+android {
+    compileSdkVersion = 22
+    buildToolsVersion = "25.0.2"
 
-//native_dependencies {
-//    artifact 'com.example:wrapper:0.0+:armeabi'
-//}
+    defaultConfig {
+        applicationId = "com.example.hellojni"
+        
+        minSdkVersion = 18
+        targetSdkVersion = 22
 
-//dependencies { 
-//    compile 'com.android.support:design:22.2.1'
-//}
+        versionCode 1
+        versionName "1.0"
 
-model {
-    android {
-        compileSdkVersion = 22
-        buildToolsVersion = "22.0.1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        defaultConfig.with {
-            applicationId = "com.example.hellojni"
-            minSdkVersion.apiLevel = 22
-            targetSdkVersion.apiLevel = 22
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11"
+                targets "demo"
+            }
         }
-
-	
+        ndk {
+            abiFilters 'armeabi-v7a' // , 'arm64-v8a'
+        }
     }
-
-   //repositories {
-   //    libs(PrebuildLibraries) { 
-   //        haskell {  
-   //           binaries.withType(SharedLibraryBinary) {
-   //                sharedLibraryFile = file("/home/wavewave/repo/src/haskell-android-example/test/libs/armeabi/libwrapper.so")
-   //            }    
-   //        }
-   //    }
-
-   //}
-
-    compileOptions.with {
-        sourceCompatibility=JavaVersion.VERSION_1_7
-        targetCompatibility=JavaVersion.VERSION_1_7
-    }
-
-    /*
-     * native build settings
-     */
-    android.buildTypes {
+    buildTypes {
         release {
-            minifyEnabled = false
-            proguardFiles  += file('proguard-rules.txt')
-        }
-    }
-    android.productFlavors {
-        create("arm") {
-           ndk.abiFilters  = ["armeabi"]
-	   // ndk.ldLibs = ["haskell"]
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
-
-
-        // for detailed abiFilter descriptions, refer to "Supported ABIs" @
-        // https://developer.android.com/ndk/guides/abis.html#sa
-        //create("arm") {
-        //    ndk.abiFilters = ["armeabi"]
-        // }
-	//create("all") {
-	//    ndk.abiFilters = ["armeabi"]
-	//}
-
-
-    //android.ndk {
-    //    moduleName = "wrapper"
-        //jniLibs.srcDirs = ['libs']
-	//ldFlags += "-L/home/wavewave/.cabal/lib/arm-linux-android-ghc-7.10.2/HaskellActivity-0.1.0.0-JgVIer3Ybhx7d2iPz3EzpS"
-	//ldLibs = ["HSHaskellActivity-0.1.0.0-JgVIer3Ybhx7d2iPz3EzpS"]
-//	ldFlags += "-Lcontrib/lib"
-//	ldLibs = ["haskell"]
-        /*
-         * Other ndk flags configurable here are
-         * cppFlags += "-fno-rtti"
-         * cppFlags += "-fno-exceptions"
-         * ldLibs    = ["android", "log"]
-         * stl       = "system"
-         */
-  //  }
-
