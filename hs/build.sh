@@ -3,7 +3,6 @@ cabal --with-ghc=arm-unknown-linux-androideabi-ghc --with-ld=arm-linux-androidea
 
 cabal build
 
-cp dist/build/libhaskell.so/libhaskell.so ../app/src/main/jniLibs/armeabi/libhaskell.so
+mv dist/build/libhaskell.so/libhaskell.so ../app/src/main/jniLibs/armeabi-v7a/libhaskell.so
 
-cd .. ; gradle installArmDebug ; cd hs
-
+# cd .. ; gradle installArmDebug ; cd hs
