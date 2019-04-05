@@ -1,3 +1,4 @@
+
 {-# LANGUAGE EmptyDataDecls #-}
 {-# LANGUAGE ForeignFunctionInterface #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -54,14 +55,14 @@ onCreate env activity tv =
     
     ref <- newIORef []
 
-    forkIO . sequenceA_ . replicate 100 $ do
+    forkIO . sequenceA_ . replicate 10 $ do
       threadDelay 10000
-      modifyIORef' ref ('a':)
+      modifyIORef' ref ('c':)
 
     -- threadDelay 1000000
-    sequenceA_ . replicate 100 $ do
+    sequenceA_ . replicate 10 $ do
       threadDelay 10000
-      modifyIORef' ref ('b':)       
+      modifyIORef' ref ('d':)       
 
     str <- readIORef ref 
       
@@ -81,7 +82,7 @@ onClick :: IORef Int -> JNIEnv -> JObject -> JObject -> IO ()
 onClick ref env activity tv = 
   do
     n <- readIORef ref
-    writeIORef ref (n+1)
+    writeIORef ref (n+3)
     cstr <- newCString (show n) -- "CLICKED"
     shout env cstr
     textViewSetText env tv cstr
