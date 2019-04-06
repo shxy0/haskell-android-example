@@ -6,25 +6,27 @@
 module HaskellActivity 
 where
 
+import System.IO
+
+import Control.Monad
 import Control.Monad.IO.Class
+
+import GHC.Conc
+import Control.Concurrent
 
 import Data.Text (Text, append, pack)
 import qualified Data.Text.IO as TIO
 
-import Foreign.C.String
--- import Foreign.JNI
--- import Foreign.JNI.Lookup
-import Foreign.Ptr
-
-import GHC.Conc
-
 import Data.Foldable
 import Data.IORef
 
-import System.IO
-import Control.Concurrent
-import Control.Monad
+-------------------------------------------------------------------------------81
 
+import Foreign.C.String
+import Foreign.Ptr
+
+-- import Foreign.JNI
+-- import Foreign.JNI.Lookup
 
 data JObjectObj
 type JObject = Ptr JObjectObj
@@ -43,8 +45,10 @@ onCreate env activity tv =
   do
     getNumProcessors >>= setNumCapabilities
     caps <- getNumCapabilities
-    let txt  = "MESSAGE FROM HASKELL:\n\nRunning on " ++ show caps ++ " CPUs!"
-    cstr <- newCString txt
+
+    let txt  = "\nMESSAGE FROM HASKELL:\n  Running on " ++ show caps ++ " CPUs!\n\n"
+    -- cstr <- newCString txt
+
     -- tid <- myThreadId
     -- forkIO $
     iref <- newIORef 0
@@ -55,19 +59,23 @@ onCreate env activity tv =
     
     ref <- newIORef []
 
-    forkIO . sequenceA_ . replicate 10 $ do
-      threadDelay 10000
-      modifyIORef' ref ('c':)
+    forkIO . sequenceA_ .
+      replicate 10 $
+      do
+        threadDelay 10000
+        modifyIORef' ref ('c':)
 
-    -- threadDelay 1000000
-    sequenceA_ . replicate 10 $ do
-      threadDelay 10000
-      modifyIORef' ref ('d':)       
+    threadDelay 1000000
+    
+    sequenceA_ .
+      replicate 10 $
+      do
+        threadDelay 10000
+        modifyIORef' ref ('d':)       
 
     str <- readIORef ref 
       
-      -- threadDelay 1000000
-    cstr1 <- newCString str
+    cstr1 <- newCString $ txt ++ str
     shout env cstr1
 
     textViewSetText env tv cstr1
@@ -114,8 +122,4 @@ stringFromJNI env _ = runJNI env $ do
                         jstr <- newString "MESSAGE FROM HASKELL: HELLO WORLD!"
                         return jstr
 
-
-getNumProcessors >>= setNumCapabilities
-    caps <- getNumCapabilities
-    return $ "Hello World!\nRunning on " `append` pack (show caps) `append` " CPUs!"
 -}

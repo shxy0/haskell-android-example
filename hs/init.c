@@ -1,9 +1,9 @@
 
 #include <stdio.h>
+
 #include <jni.h>
 #include <HsFFI.h>
 
-//extern void hs_set_java_vm(HsPtr a1);
 
 extern void __stginit_HaskellActivity(void);
 
@@ -13,8 +13,6 @@ void c_register_on_click_fptr( void (*v)(JNIEnv*,jobject,jobject) )
 {
   fptr_onclick = v;
 }
-
-// static int Log.D(String tag, String msg)
 
 void shout ( JNIEnv* env,  char* cmsg ) 
 { 
